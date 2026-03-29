@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Basic Probability Practice - Mr. McLean Math</title>
+<style>
+  :root{
+    --bg:#f4f7fb;
+    --panel:#ffffff;
+    --panel2:#eef3f9;
+    --text:#17212b;
+    --muted:#556372;
+    --border:#cfd9e4;
+    --accent:#1f6feb;
+    --accent2:#0b57d0;
+    --good:#147a3d;
+    --bad:#b42318;
+    --warn:#9a6700;
+    --shadow:0 8px 24px rgba(18,38,63,.08);
+  }
+  body.high-contrast{
+    --bg:#000000;
+    --panel:#111111;
+    --panel2:#1b1b1b;
+    --text:#ffffff;
+    --muted:#d7d7d7;
+    --border:#6f6f6f;
+    --accent:#ffd400;
+    --accent2:#ffd400;
+    --good:#46f08a;
+    --bad:#ff6b6b;
+    --warn:#ffd166;
+    --shadow:none;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+  }
+  .wrap{
+    max-width:1200px;
+    margin:0 auto;
+    padding:16px;
+  }
+  .title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  h1{
+    font-size:clamp(24px,3vw,36px);
+    margin:0;
+  }
+  .subtitle{
+    color:var(--muted);
+    font-size:14px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:360px 1fr;
+    gap:16px;
+  }
+  @media (max-width: 980px){
+    .grid{grid-template-columns:1fr}
+  }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    padding:14px;
+  }
+  .card h2,.card h3{
+    margin:0 0 10px 0;
+  }
+  .controls{
+    display:grid;
+    gap:12px;
+  }
+  .row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+  }
+  .row.stack{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  label{
+    font-weight:bold;
+    font-size:14px;
+  }
+  .small{
+    font-size:12px;
+    color:var(--muted);
+  }
+  button, select, input[type="text"]{
+    font:inherit;
+  }
+  button{
+    border:1px solid var(--border);
+    background:var(--panel2);
+    color:var(--text);
+    border-radius:12px;
+    padding:10px 12px;
+    cursor:pointer;
+  }
+  button:hover{border-color:var(--accent)}
+  button.primary{
+    background:var(--accent);
+    color:#fff;
+    border-color:var(--accent);
+  }
+  body.high-contrast button.primary{
+    color:#000;
+  }
+  button.active{
+    outline:3px solid rgba(31,111,235,.18);
+    border-color:var(--accent);
+  }
+  body.high-contrast button.active{
+    outline:3px solid rgba(255,212,0,.28);
+  }
+  .pillset{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .mode-btn{
+    min-width:70px;
+  }
+  .status-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+  }
+  .status-box{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:10px;
+    min-height:72px;
+  }
+  .status-label{
+    color:var(--muted);
+    font-size:12px;
+  }
+  .status-value{
+    font-size:26px;
+    font-weight:bold;
+    margin-top:2px;
+  }
+  .question-box{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px;
+    font-size:clamp(20px,2.4vw,32px);
+    line-height:1.45;
+    min-height:160px;
+  }
+  .answer-area{
+    display:grid;
+    gap:10px;
+    margin-top:12px;
+  }
+  .answer-input{
+    width:100%;
+    padding:14px 16px;
+    border-radius:14px;
+    border:2px solid var(--border);
+    background:#fff;
+    color:#111;
+    font-size:clamp(18px,2vw,28px);
+  }
+  body.high-contrast .answer-input{
+    background:#000;
+    color:#fff;
+  }
+  .feedback{
+    min-height:42px;
+    display:flex;
+    align-items:center;
+    font-weight:bold;
+    font-size:20px;
+  }
+  .feedback.good{color:var(--good)}
+  .feedback.bad{color:var(--bad)}
+  .feedback.warn{color:var(--warn)}
+  .inline{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .steps{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:12px;
+    line-height:1.5;
+    white-space:pre-wrap;
+    display:none;
+  }
+  .history{
+    display:grid;
+    gap:8px;
+  }
+  .history-item{
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:10px;
+    background:var(--panel2);
+    font-size:14px;
+  }
+  .history-item.ok{border-left:6px solid var(--good)}
+  .history-item.no{border-left:6px solid var(--bad)}
+  details summary{
+    cursor:pointer;
+    font-weight:bold;
+  }
+  .footer{
+    text-align:center;
+    color:var(--muted);
+    margin:18px 0 4px;
+    font-size:14px;
+  }
+  .timer-badge{
+    font-weight:bold;
+    color:var(--accent2);
+  }
+  .worksheet-controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    align-items:center;
+  }
+  .worksheet-list{
+    display:grid;
+    gap:12px;
+    margin-top:12px;
+  }
+  .ws-item{
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:12px;
+    background:var(--panel2);
+  }
+  .ws-q{
+    font-size:18px;
+    line-height:1.45;
+  }
+  .ws-actions{
+    margin-top:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .ws-answer,.ws-steps{
+    margin-top:10px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:10px;
+    display:none;
+    line-height:1.45;
+    white-space:pre-wrap;
+  }
+  .dev-panel{
+    margin-top:16px;
+    padding:12px;
+    border-radius:14px;
+    border:2px dashed var(--border);
+    background:var(--panel2);
+    display:none;
+  }
+  .dev-pass{color:var(--good); font-weight:bold}
+  .dev-fail{color:var(--bad); font-weight:bold}
+  .mono{font-family:Consolas, Menlo, Monaco, monospace}
+  .hidden{
+    display:none !important;
+  }
+  .sr-only{
+    position:absolute !important;
+    width:1px !important;
+    height:1px !important;
+    padding:0 !important;
+    margin:-1px !important;
+    overflow:hidden !important;
+    clip:rect(0,0,0,0) !important;
+    white-space:nowrap !important;
+    border:0 !important;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">
+    <div>
+      <h1>Basic Probability Practice</h1>
+      <div class="subtitle">Game mode and worksheet mode. Free input accepts fraction, percent, or decimal.</div>
+    </div>
+    <div class="subtitle timer-badge" id="timerReadout">Timer: Off</div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Controls</h2>
+      <div class="controls">
+        <div>
+          <label>Mode</label>
+          <div class="pillset" id="modeButtons">
+            <button class="mode-btn active" data-mode="game">Game</button>
+            <button class="mode-btn" data-mode="worksheet">Worksheet</button>
+          </div>
+        </div>
+
+        <div>
+          <label>Difficulty</label>
+          <div class="pillset" id="difficultyButtons">
+            <button class="active" data-difficulty="easy">Easy</button>
+            <button data-difficulty="medium">Medium</button>
+            <button data-difficulty="hard">Hard</button>
+            <button data-difficulty="random">Random</button>
+          </div>
+        </div>
+
+        <div>
+          <label>Timer</label>
+          <div class="row">
+            <button id="timerToggle">Off</button>
+            <div class="pillset" id="timerButtons">
+              <button data-seconds="30">30s</button>
+              <button data-seconds="60">60s</button>
+              <button data-seconds="90">90s</button>
+              <button data-seconds="120">120s</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label>Options</label>
+          <div class="row">
+            <button id="soundToggle" class="active">Sound On</button>
+            <button id="contrastToggle">High Contrast Off</button>
+            <button id="newQuestionBtn">New Question</button>
+          </div>
+          <div class="small">Keyboard: Enter = Submit / Next after correct, Esc = Clear input</div>
+        </div>
+
+        <div id="worksheetSidePanel" class="hidden">
+          <label>Worksheet</label>
+          <div class="worksheet-controls">
+            <button data-wscount="5" class="active" id="ws5">5</button>
+            <button data-wscount="10" id="ws10">10</button>
+            <button data-wscount="15" id="ws15">15</button>
+            <button class="primary" id="generateWorksheetBtn">Generate</button>
+          </div>
+        </div>
+
+        <div>
+          <label>Live Result Panel</label>
+          <div class="history" id="livePanel">
+            <div class="history-item">Ready. Answers may be entered as fraction, percent, or decimal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="gameModePanel">
+        <h2>Game Mode</h2>
+
+        <div class="status-grid">
+          <div class="status-box">
+            <div class="status-label">Total</div>
+            <div class="status-value" id="statTotal">0</div>
+          </div>
+          <div class="status-box">
+            <div class="status-label">Correct</div>
+            <div class="status-value" id="statCorrect">0</div>
+          </div>
+          <div class="status-box">
+            <div class="status-label">Accuracy</div>
+            <div class="status-value" id="statAccuracy">0%</div>
+          </div>
+          <div class="status-box">
+            <div class="status-label">Score</div>
+            <div class="status-value" id="statScore">0</div>
+          </div>
+          <div class="status-box">
+            <div class="status-label">Streak</div>
+            <div class="status-value" id="statStreak">0</div>
+          </div>
+          <div class="status-box">
+            <div class="status-label">Difficulty</div>
+            <div class="status-value" id="statDifficulty">Easy</div>
+          </div>
+        </div>
+
+        <div class="question-box" id="questionBox" aria-live="polite"></div>
+
+        <div class="answer-area">
+          <label for="answerInput">Type your answer</label>
+          <input id="answerInput" class="answer-input" type="text" autocomplete="off" inputmode="decimal" placeholder="Example: 3/8 or 37.5% or 0.375" />
+          <div class="inline">
+            <button class="primary" id="submitBtn">Submit</button>
+            <button id="nextBtn" disabled>Next</button>
+            <button id="clearBtn">Clear</button>
+            <button id="showStepsBtn" disabled>Show Steps</button>
+          </div>
+          <div id="feedback" class="feedback" aria-live="assertive"></div>
+          <div id="stepsBox" class="steps"></div>
+        </div>
+
+        <details style="margin-top:12px;">
+          <summary>Session Summary</summary>
+          <div class="small" style="margin:10px 0 12px;">Total, Correct, Accuracy, Score, Streak, and incorrect list.</div>
+          <div id="summaryText"></div>
+          <details style="margin-top:10px;">
+            <summary>Incorrect List</summary>
+            <div id="incorrectList" class="history" style="margin-top:10px;"></div>
+          </details>
+        </details>
+      </div>
+
+      <div id="worksheetModePanel" class="hidden">
+        <h2>Worksheet Mode</h2>
+        <div class="small">Instruction: Write each answer as a fraction, percent, or decimal.</div>
+        <div class="worksheet-list" id="worksheetList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="devPanel" class="dev-panel"></div>
+
+  <div class="footer">Created by Mr. McLean Math.</div>
+</div>
+
+<div class="sr-only" aria-live="polite" id="ariaLive"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  const state = {
+    mode: "game",
+    difficulty: "easy",
+    timerOn: false,
+    timerSeconds: 30,
+    timeLeft: 30,
+    timerId: null,
+    soundOn: true,
+    highContrast: false,
+    currentQuestion: null,
+    awaitingNext: false,
+    stats: {
+      total: 0,
+      correct: 0,
+      score: 0,
+      streak: 0
+    },
+    incorrectItems: [],
+    recentFingerprints: [],
+    worksheetCount: 5,
+    rngSeed: Date.now() % 2147483647
+  };
+
+  const el = {
+    modeButtons: document.getElementById("modeButtons"),
+    difficultyButtons: document.getElementById("difficultyButtons"),
+    timerToggle: document.getElementById("timerToggle"),
+    timerButtons: document.getElementById("timerButtons"),
+    soundToggle: document.getElementById("soundToggle"),
+    contrastToggle: document.getElementById("contrastToggle"),
+    newQuestionBtn: document.getElementById("newQuestionBtn"),
+    questionBox: document.getElementById("questionBox"),
+    answerInput: document.getElementById("answerInput"),
+    submitBtn: document.getElementById("submitBtn"),
+    nextBtn: document.getElementById("nextBtn"),
+    clearBtn: document.getElementById("clearBtn"),
+    showStepsBtn: document.getElementById("showStepsBtn"),
+    feedback: document.getElementById("feedback"),
+    stepsBox: document.getElementById("stepsBox"),
+    statTotal: document.getElementById("statTotal"),
+    statCorrect: document.getElementById("statCorrect"),
+    statAccuracy: document.getElementById("statAccuracy"),
+    statScore: document.getElementById("statScore"),
+    statStreak: document.getElementById("statStreak"),
+    statDifficulty: document.getElementById("statDifficulty"),
+    timerReadout: document.getElementById("timerReadout"),
+    summaryText: document.getElementById("summaryText"),
+    incorrectList: document.getElementById("incorrectList"),
+    livePanel: document.getElementById("livePanel"),
+    worksheetSidePanel: document.getElementById("worksheetSidePanel"),
+    gameModePanel: document.getElementById("gameModePanel"),
+    worksheetModePanel: document.getElementById("worksheetModePanel"),
+    generateWorksheetBtn: document.getElementById("generateWorksheetBtn"),
+    worksheetList: document.getElementById("worksheetList"),
+    devPanel: document.getElementById("devPanel"),
+    ariaLive: document.getElementById("ariaLive")
+  };
+
+  const words = {
+    colors: ["red","blue","green","yellow","purple","orange","black","white","pink","brown"],
+    items: ["marbles","beads","counters","tokens","cubes","candies","stickers","cards","balls","buttons","erasers","pencils","toy cars","blocks","socks","bookmarks"],
+    containers: ["bag","jar","box","drawer","basket","bowl","cup","case","pouch","container"],
+    fruits: ["apples","bananas","pears","oranges","grapes","plums","peaches","kiwis"],
+    students: ["Emma","Leo","Sara","Noah","Mila","Lucas","Ella","Oskar","Ava","Liam","Nora","Axel","Elsa","Hugo","Maya","Oliver","Alva","Elias"],
+    classes: [18,20,22,24,25,28,30],
+    weather: [
+      {event:"snow", chance:60},
+      {event:"rain", chance:70},
+      {event:"fog", chance:25},
+      {event:"wind", chance:40},
+      {event:"sunshine", chance:80}
+    ],
+    spinnerLabels: ["red","blue","green","yellow","orange","purple","silver","gold"],
+    schoolItems: ["notebooks","rulers","markers","pens","highlighters","folders"],
+    cardSets: [10,12,15,20,24,30,40,50,60],
+    subjectGroups: ["boys","girls","students wearing glasses","left-handed students","students with lunch boxes"],
+    gameContexts: ["board game","raffle","quiz game","card game","class game"]
+  };
+
+  function setAria(msg){
+    el.ariaLive.textContent = "";
+    setTimeout(() => { el.ariaLive.textContent = msg; }, 10);
+  }
+
+  function rng(){
+    state.rngSeed = (state.rngSeed * 48271) % 2147483647;
+    return state.rngSeed / 2147483647;
+  }
+
+  function randInt(min,max){
+    return Math.floor(rng() * (max - min + 1)) + min;
+  }
+
+  function pick(arr){
+    return arr[randInt(0, arr.length - 1)];
+  }
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = randInt(0,i);
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function gcd(a,b){
+    a = Math.abs(a);
+    b = Math.abs(b);
+    while(b){
+      const t = b;
+      b = a % b;
+      a = t;
+    }
+    return a || 1;
+  }
+
+  function simplifyFraction(n,d){
+    const g = gcd(n,d);
+    return {n:n/g, d:d/g};
+  }
+
+  function fractionToDecimal(n,d){
+    return n / d;
+  }
+
+  function formatPct(x){
+    const v = x * 100;
+    if (Math.abs(v - Math.round(v)) < 1e-10) return String(Math.round(v)) + "%";
+    return stripTrailingZeros(v.toFixed(6)) + "%";
+  }
+
+  function stripTrailingZeros(str){
+    return str.replace(/(\.\d*?[1-9])0+$/,"$1").replace(/\.0+$/,"");
+  }
+
+  function percentStringToValue(str){
+    return parseFloat(str.replace("%","").replace(",", ".")) / 100;
+  }
+
+  function normalizeSpaces(s){
+    return s.replace(/\s+/g,"").trim();
+  }
+
+  function parseUserAnswer(raw){
+    if (!raw || !raw.trim()) return {ok:false, reason:"empty"};
+
+    let s = raw.trim().toLowerCase();
+    s = s.replace(/−/g, "-").replace(/\s+/g, "");
+    s = s.replace(",", ".");
+
+    if (s.endsWith("%")){
+      const num = s.slice(0,-1);
+      if (!/^[-+]?\d*\.?\d+$/.test(num)) return {ok:false, reason:"bad percent"};
+      return {ok:true, value:parseFloat(num)/100, type:"percent"};
+    }
+
+    if (s.includes("/")){
+      const parts = s.split("/");
+      if (parts.length !== 2) return {ok:false, reason:"bad fraction"};
+      if (!/^[-+]?\d+$/.test(parts[0]) || !/^[-+]?\d+$/.test(parts[1])) return {ok:false, reason:"bad fraction"};
+      const a = parseInt(parts[0],10);
+      const b = parseInt(parts[1],10);
+      if (b === 0) return {ok:false, reason:"zero denominator"};
+      return {ok:true, value:a/b, type:"fraction"};
+    }
+
+    if (!/^[-+]?\d*\.?\d+$/.test(s)) return {ok:false, reason:"bad decimal"};
+    return {ok:true, value:parseFloat(s), type:"decimal"};
+  }
+
+  function answerMatches(userRaw, q){
+    const parsed = parseUserAnswer(userRaw);
+    if (!parsed.ok) return {correct:false, parsed};
+    const diff = Math.abs(parsed.value - q.answerValue);
+    return {correct: diff < 1e-9, parsed};
+  }
+
+  function niceFraction(n,d){
+    const s = simplifyFraction(n,d);
+    return s.n + "/" + s.d;
+  }
+
+  function makeFingerprint(text){
+    return text.toLowerCase().replace(/\s+/g, " ").trim();
+  }
+
+  function pushRecentFingerprint(fp){
+    state.recentFingerprints.push(fp);
+    if(state.recentFingerprints.length > 8) state.recentFingerprints.shift();
+  }
+
+  function isRecentFingerprint(fp){
+    return state.recentFingerprints.includes(fp);
+  }
+
+  function chooseDifficulty(){
+    if (state.difficulty !== "random") return state.difficulty;
+    return pick(["easy","medium","hard"]);
+  }
+
+  function makeQuestion(){
+    let q = null;
+    let tries = 0;
+    do{
+      const diff = chooseDifficulty();
+      if(diff === "easy") q = generateEasy();
+      if(diff === "medium") q = generateMedium();
+      if(diff === "hard") q = generateHard();
+      tries++;
+      if(tries > 50) break;
+    } while(isRecentFingerprint(makeFingerprint(q.text)));
+    pushRecentFingerprint(makeFingerprint(q.text));
+    q.difficulty = q.difficulty || chooseDifficulty();
+    return q;
+  }
+
+  function coinQuestion(){
+    const side = pick(["heads","tails"]);
+    return {
+      text: "A fair coin is flipped once. What is the probability it lands on " + side + "?",
+      answerValue: 1/2,
+      preferredAnswer: "1/2",
+      steps: "A fair coin has 2 equally likely outcomes.\nFavorable outcomes: 1\nTotal outcomes: 2\nProbability = 1/2",
+      meta: {type:"simple-coin"}
+    };
+  }
+
+  function dieQuestion(){
+    const face = randInt(1,6);
+    return {
+      text: "A fair die is rolled. What is the probability of rolling a " + face + "?",
+      answerValue: 1/6,
+      preferredAnswer: "1/6",
+      steps: "A fair die has 6 equally likely outcomes.\nFavorable outcomes: 1\nTotal outcomes: 6\nProbability = 1/6",
+      meta: {type:"simple-die"}
+    };
+  }
+
+  function spinnerQuestionEasy(){
+    const sections = pick([4,5,6,8]);
+    const labels = shuffle(words.spinnerLabels).slice(0, sections);
+    const wanted = pick(labels);
+    return {
+      text: "A spinner is divided into " + sections + " equal sections: " + labels.join(", ") + ". What is the probability it lands on " + wanted + "?",
+      answerValue: 1/sections,
+      preferredAnswer: "1/" + sections,
+      steps: "The spinner has " + sections + " equal sections.\nThe color " + wanted + " appears once.\nFavorable outcomes: 1\nTotal outcomes: " + sections + "\nProbability = 1/" + sections,
+      meta: {type:"spinner-easy"}
+    };
+  }
+
+  function numberedCardsEvenQuestion(){
+    const max = pick([10,12,20]);
+    const favorable = Math.floor(max/2);
+    return {
+      text: "There are " + max + " cards numbered 1 to " + max + ". What is the probability of drawing a card with an even number?",
+      answerValue: favorable / max,
+      preferredAnswer: niceFraction(favorable, max),
+      steps: "Count the even numbers from 1 to " + max + ".\nThere are " + favorable + " even numbers.\nTotal cards: " + max + "\nProbability = " + favorable + "/" + max + " = " + niceFraction(favorable, max),
+      meta: {type:"even-cards"}
+    };
+  }
+
+  function countObjectsQuestionEasy(){
+    const container = pick(words.containers);
+    const item = pick(words.items);
+    let a = randInt(2,6);
+    let b = randInt(2,7);
+    while(a === b && rng() < 0.5) b = randInt(2,7);
+    const c1 = pick(words.colors);
+    let c2 = pick(words.colors.filter(x => x !== c1));
+    const askColor = rng() < 0.5 ? c1 : c2;
+    const favorable = askColor === c1 ? a : b;
+    const total = a + b;
+    return {
+      text: "A " + container + " contains " + a + " " + c1 + " " + item + " and " + b + " " + c2 + " " + item + ". What is the probability of selecting a " + askColor + " " + item.slice(0,-1) + "?",
+      answerValue: favorable / total,
+      preferredAnswer: niceFraction(favorable,total),
+      steps: "Favorable outcomes: " + favorable + "\nTotal outcomes: " + total + "\nProbability = " + favorable + "/" + total + " = " + niceFraction(favorable,total),
+      meta: {type:"count-objects-easy"}
+    };
+  }
+
+  function generateEasy(){
+    const generators = [
+      coinQuestion,
+      dieQuestion,
+      spinnerQuestionEasy,
+      numberedCardsEvenQuestion,
+      countObjectsQuestionEasy
+    ];
+    const q = pick(generators)();
+    q.difficulty = "easy";
+    return q;
+  }
+
+  function complementObjectsQuestion(){
+    const container = pick(words.containers);
+    const item = pick(words.items);
+    const groups = shuffle(words.colors).slice(0,3);
+    const a = randInt(2,6);
+    const b = randInt(2,6);
+    const c = randInt(1,5);
+    const counts = [a,b,c];
+    const notIndex = randInt(0,2);
+    const favorable = a + b + c - counts[notIndex];
+    const total = a + b + c;
+    return {
+      text: "A " + container + " has " + a + " " + groups[0] + " " + item + ", " + b + " " + groups[1] + " " + item + ", and " + c + " " + groups[2] + " " + item + ". What is the probability of not selecting a " + groups[notIndex] + " " + item.slice(0,-1) + "?",
+      answerValue: favorable / total,
+      preferredAnswer: niceFraction(favorable,total),
+      steps: "First find the total number of " + item + ".\nTotal = " + total + "\n" +
+             "The number you do NOT want is " + counts[notIndex] + ".\n" +
+             "So favorable outcomes = " + total + " - " + counts[notIndex] + " = " + favorable + "\n" +
+             "Probability = " + favorable + "/" + total + " = " + niceFraction(favorable,total),
+      meta: {type:"complement-objects"}
+    };
+  }
+
+  function weatherComplementQuestion(){
+    const w = pick(words.weather);
+    return {
+      text: "The weather forecast says there is a " + w.chance + "% chance of " + w.event + " on Saturday. What is the probability that it will not " + w.event + "?",
+      answerValue: (100 - w.chance) / 100,
+      preferredAnswer: (100 - w.chance) + "%",
+      steps: "The total probability is 100%.\nChance of " + w.event + " = " + w.chance + "%\nChance it does not " + w.event + " = 100% - " + w.chance + "% = " + (100 - w.chance) + "%",
+      meta: {type:"weather-complement"}
+    };
+  }
+
+  function classSelectionQuestion(){
+    const total = pick(words.classes);
+    let boys = randInt(8, total - 6);
+    const girls = total - boys;
+    const askGirls = rng() < 0.5;
+    const favorable = askGirls ? girls : boys;
+    const label = askGirls ? "girl" : "boy";
+    return {
+      text: "A teacher chooses a random student from a class of " + total + ". If " + boys + " students are boys, what is the probability the teacher chooses a " + label + "?",
+      answerValue: favorable / total,
+      preferredAnswer: niceFraction(favorable, total),
+      steps: "Total students = " + total + "\nBoys = " + boys + "\nGirls = " + girls + "\n" +
+             "Favorable outcomes = " + favorable + "\nProbability = " + favorable + "/" + total + " = " + niceFraction(favorable,total),
+      meta: {type:"class-selection"}
+    };
+  }
+
+  function whiteSockQuestion(){
+    const black = randInt(4,8);
+    const white = randInt(1,4);
+    const total = black + white;
+    return {
+      text: "A drawer contains " + black + " black socks and " + white + " white socks. What is the probability of drawing a white sock?",
+      answerValue: white / total,
+      preferredAnswer: niceFraction(white,total),
+      steps: "Favorable outcomes = white socks = " + white + "\nTotal socks = " + total + "\nProbability = " + white + "/" + total + " = " + niceFraction(white,total),
+      meta: {type:"sock-white"}
+    };
+  }
+
+  function fruitComplementQuestion(){
+    const fruitNames = shuffle(words.fruits).slice(0,3);
+    const a = randInt(2,6);
+    const b = randInt(2,5);
+    const c = randInt(1,4);
+    const total = a+b+c;
+    const avoid = fruitNames[1];
+    const favorable = a+c;
+    return {
+      text: "A basket has " + a + " " + fruitNames[0] + ", " + b + " " + fruitNames[1] + ", and " + c + " " + fruitNames[2] + ". What is the probability of not selecting a " + avoid.slice(0,-1) + "?",
+      answerValue: favorable / total,
+      preferredAnswer: niceFraction(favorable,total),
+      steps: "Total fruit = " + total + "\nThe fruit to avoid is " + avoid + " = " + b + "\nFavorable outcomes = " + total + " - " + b + " = " + favorable + "\nProbability = " + favorable + "/" + total + " = " + niceFraction(favorable,total),
+      meta: {type:"fruit-complement"}
+    };
+  }
+
+  function generateMedium(){
+    const generators = [
+      complementObjectsQuestion,
+      weatherComplementQuestion,
+      classSelectionQuestion,
+      whiteSockQuestion,
+      fruitComplementQuestion
+    ];
+    const q = pick(generators)();
+    q.difficulty = "medium";
+    return q;
+  }
+
+  function multipleOfQuestion(){
+    const max = pick([20,30,40,50,60]);
+    const k = pick([2,3,4,5,10]);
+    const favorable = Math.floor(max / k);
+    return {
+      text: "A " + pick(words.gameContexts) + " uses cards numbered 1 to " + max + ". What is the probability of drawing a number that is a multiple of " + k + "?",
+      answerValue: favorable / max,
+      preferredAnswer: niceFraction(favorable, max),
+      steps: "Count the multiples of " + k + " from 1 to " + max + ".\nThere are " + favorable + " such numbers.\nTotal cards = " + max + "\nProbability = " + favorable + "/" + max + " = " + niceFraction(favorable,max),
+      meta: {type:"multiple-of"}
+    };
+  }
+
+  function raffleQuestion(){
+    const total = pick([40,50,60,80,100]);
+    const bought = pick([2,3,4,5,10].filter(v => v < total/2));
+    return {
+      text: "A raffle has " + total + " tickets. If you bought " + bought + " of them, what is the probability that your ticket is drawn?",
+      answerValue: bought / total,
+      preferredAnswer: niceFraction(bought,total),
+      steps: "Favorable outcomes = your tickets = " + bought + "\nTotal outcomes = " + total + "\nProbability = " + bought + "/" + total + " = " + niceFraction(bought,total),
+      meta: {type:"raffle"}
+    };
+  }
+
+  function notSelectingOneColorHard(){
+    const colors = shuffle(words.colors).slice(0,3);
+    const item = pick(words.items);
+    const a = randInt(2,5);
+    const b = randInt(3,6);
+    const c = randInt(4,8);
+    const counts = [a,b,c];
+    const avoidIndex = randInt(0,2);
+    const total = a+b+c;
+    const favorable = total - counts[avoidIndex];
+    return {
+      text: "A " + pick(words.containers) + " contains " + a + " " + colors[0] + " " + item + ", " + b + " " + colors[1] + " " + item + ", and " + c + " " + colors[2] + " " + item + ". What is the probability of not selecting a " + colors[avoidIndex] + " " + item.slice(0,-1) + "?",
+      answerValue: favorable / total,
+      preferredAnswer: niceFraction(favorable,total),
+      steps: "Total items = " + total + "\nAvoid color count = " + counts[avoidIndex] + "\nFavorable outcomes = " + total + " - " + counts[avoidIndex] + " = " + favorable + "\nProbability = " + favorable + "/" + total + " = " + niceFraction(favorable,total),
+      meta: {type:"not-select-hard"}
+    };
+  }
+
+  function mcChoicesReverseQuestion(){
+    const choices = pick([4,5,8,10]);
+    const pct = 100 / choices;
+    return {
+      text: "A student says the chance of guessing correctly on a multiple-choice question is " + pct + "%. How many answer choices are there?",
+      answerValue: choices,
+      preferredAnswer: String(choices),
+      steps: "If each answer choice is equally likely, then probability of guessing correctly = 1 / number of choices.\n" +
+             "So 1 / number of choices = " + pct + "%\n" +
+             pct + "% = " + (pct/100) + "\n" +
+             "That means 1 / number of choices = " + (pct/100) + "\n" +
+             "So the number of choices = " + choices,
+      meta: {type:"mc-choices-reverse", allowGreaterThanOne:true}
+    };
+  }
+
+  function missingBlueMarblesQuestion(){
+    const green = pick([4,5,6,8,10]);
+    const blue = pick([12,15,18,20,24,30]);
+    const total = green + blue;
+    const value = green / total;
+    const pct = Math.round(value * 100);
+    if (Math.abs(pct/100 - value) > 1e-12) return missingBlueMarblesQuestion();
+    return {
+      text: "A bowl contains only green and blue marbles. The probability of randomly selecting one of the " + green + " green marbles is " + pct + "%. How many blue marbles are in the bowl?",
+      answerValue: blue,
+      preferredAnswer: String(blue),
+      steps: "Probability of green = green / total\n" +
+             green + " / total = " + pct + "% = " + (pct/100) + "\n" +
+             "So total = " + green + " / " + (pct/100) + " = " + total + "\n" +
+             "Blue marbles = total - green = " + total + " - " + green + " = " + blue,
+      meta: {type:"missing-blue", allowGreaterThanOne:true}
+    };
+  }
+
+  function generateHard(){
+    const generators = [
+      multipleOfQuestion,
+      raffleQuestion,
+      notSelectingOneColorHard,
+      mcChoicesReverseQuestion,
+      missingBlueMarblesQuestion
+    ];
+    const q = pick(generators)();
+    q.difficulty = "hard";
+    return q;
+  }
+
+  function renderQuestion(){
+    state.currentQuestion = makeQuestion();
+    state.awaitingNext = false;
+    el.questionBox.textContent = state.currentQuestion.text;
+    el.answerInput.value = "";
+    el.feedback.textContent = "";
+    el.feedback.className = "feedback";
+    el.stepsBox.style.display = "none";
+    el.stepsBox.textContent = "";
+    el.showStepsBtn.disabled = true;
+    el.nextBtn.disabled = true;
+    updateStatDifficultyLabel();
+    focusInputSoon();
+    if(state.mode === "game" && state.timerOn){
+      resetTimer();
+      startTimer();
+    } else {
+      stopTimer();
+      updateTimerReadout();
+    }
+  }
+
+  function focusInputSoon(){
+    setTimeout(() => el.answerInput.focus(), 40);
+  }
+
+  function addLivePanel(message, cls){
+    const div = document.createElement("div");
+    div.className = "history-item " + (cls || "");
+    div.textContent = message;
+    el.livePanel.prepend(div);
+    while(el.livePanel.children.length > 7){
+      el.livePanel.removeChild(el.livePanel.lastChild);
+    }
+  }
+
+  function updateStats(){
+    el.statTotal.textContent = state.stats.total;
+    el.statCorrect.textContent = state.stats.correct;
+    const acc = state.stats.total ? Math.round((state.stats.correct / state.stats.total) * 100) : 0;
+    el.statAccuracy.textContent = acc + "%";
+    el.statScore.textContent = state.stats.score;
+    el.statStreak.textContent = state.stats.streak;
+    el.summaryText.textContent =
+      "Total: " + state.stats.total +
+      " | Correct: " + state.stats.correct +
+      " | Accuracy: " + acc + "%" +
+      " | Score: " + state.stats.score +
+      " | Streak: " + state.stats.streak;
+  }
+
+  function updateIncorrectList(){
+    el.incorrectList.innerHTML = "";
+    if(state.incorrectItems.length === 0){
+      const div = document.createElement("div");
+      div.className = "history-item";
+      div.textContent = "No incorrect answers yet.";
+      el.incorrectList.appendChild(div);
+      return;
+    }
+    state.incorrectItems.slice().reverse().forEach(item => {
+      const div = document.createElement("div");
+      div.className = "history-item no";
+      div.textContent = "Question: " + item.question + " | Your answer: " + item.user + " | Correct answer: " + item.correct;
+      el.incorrectList.appendChild(div);
+    });
+  }
+
+  function handleCorrect(userRaw){
+    state.stats.total++;
+    state.stats.correct++;
+    state.stats.streak++;
+    state.stats.score += 10;
+    if(state.stats.streak > 0 && state.stats.streak % 5 === 0){
+      state.stats.score += 5;
+      addLivePanel("Streak bonus! +" + 5 + " at streak " + state.stats.streak + ".", "ok");
+    }
+
+    updateStats();
+    el.feedback.textContent = "Correct! Press Enter or click Next.";
+    el.feedback.className = "feedback good";
+    el.showStepsBtn.disabled = true;
+    el.nextBtn.disabled = false;
+    state.awaitingNext = true;
+    playTone(true);
+    addLivePanel("Correct. Answer entered: " + userRaw, "ok");
+    setAria("Correct. Press Enter or Next.");
+    stopTimer();
+  }
+
+  function handleIncorrect(userRaw){
+    state.stats.total++;
+    state.stats.streak = 0;
+    updateStats();
+    el.feedback.textContent = "Incorrect. You can try the steps.";
+    el.feedback.className = "feedback bad";
+    el.showStepsBtn.disabled = false;
+    el.nextBtn.disabled = true;
+    state.awaitingNext = false;
+    playTone(false);
+    state.incorrectItems.push({
+      question: state.currentQuestion.text,
+      user: userRaw,
+      correct: state.currentQuestion.preferredAnswer
+    });
+    updateIncorrectList();
+    addLivePanel("Incorrect. Your answer: " + userRaw + " | Correct answer: " + state.currentQuestion.preferredAnswer, "no");
+    setAria("Incorrect. Show Steps is available.");
+    stopTimer();
+  }
+
+  function checkAnswer(){
+    if(!state.currentQuestion) return;
+    const raw = el.answerInput.value.trim();
+    if(!raw){
+      el.feedback.textContent = "Please enter an answer.";
+      el.feedback.className = "feedback warn";
+      setAria("Please enter an answer.");
+      return;
+    }
+    const result = answerMatches(raw, state.currentQuestion);
+    if(!result.parsed.ok){
+      el.feedback.textContent = "That answer format is not valid.";
+      el.feedback.className = "feedback warn";
+      setAria("That answer format is not valid.");
+      return;
+    }
+
+    const value = result.parsed.value;
+    const q = state.currentQuestion;
+    const greaterAllowed = !!(q.meta && q.meta.allowGreaterThanOne);
+
+    if(!greaterAllowed && (value < -1e-12 || value > 1 + 1e-12)){
+      el.feedback.textContent = "Probability answers should be between 0 and 1.";
+      el.feedback.className = "feedback warn";
+      setAria("Probability answers should be between 0 and 1.");
+      return;
+    }
+
+    if(result.correct){
+      handleCorrect(raw);
+    }else{
+      handleIncorrect(raw);
+    }
+  }
+
+  function nextQuestion(){
+    renderQuestion();
+  }
+
+  function showSteps(){
+    if(!state.currentQuestion) return;
+    el.stepsBox.textContent = state.currentQuestion.steps;
+    el.stepsBox.style.display = "block";
+    setAria("Steps shown.");
+  }
+
+  function clearInput(){
+    el.answerInput.value = "";
+    el.answerInput.focus();
+    setAria("Input cleared.");
+  }
+
+  function updateStatDifficultyLabel(){
+    const labelMap = {easy:"Easy", medium:"Medium", hard:"Hard", random:"Random"};
+    el.statDifficulty.textContent = labelMap[state.difficulty];
+  }
+
+  function updateModeUI(){
+    const game = state.mode === "game";
+    el.gameModePanel.classList.toggle("hidden", !game);
+    el.worksheetModePanel.classList.toggle("hidden", game);
+    el.worksheetSidePanel.classList.toggle("hidden", game);
+    if(game){
+      renderQuestion();
+    }
+  }
+
+  function setActiveButtonGroup(container, attr, value){
+    Array.from(container.querySelectorAll("button[" + attr + "]")).forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute(attr) === value);
+    });
+  }
+
+  function updateTimerReadout(){
+    if(!state.timerOn){
+      el.timerReadout.textContent = "Timer: Off";
+      return;
+    }
+    el.timerReadout.textContent = "Timer: " + state.timeLeft + "s";
+  }
+
+  function stopTimer(){
+    if(state.timerId){
+      clearInterval(state.timerId);
+      state.timerId = null;
+    }
+  }
+
+  function resetTimer(){
+    state.timeLeft = state.timerSeconds;
+    updateTimerReadout();
+  }
+
+  function startTimer(){
+    stopTimer();
+    state.timerId = setInterval(() => {
+      state.timeLeft--;
+      updateTimerReadout();
+      if(state.timeLeft <= 0){
+        stopTimer();
+        timeExpired();
+      }
+    }, 1000);
+  }
+
+  function timeExpired(){
+    if(!state.currentQuestion || state.awaitingNext) return;
+    state.stats.total++;
+    state.stats.streak = 0;
+    updateStats();
+    state.incorrectItems.push({
+      question: state.currentQuestion.text,
+      user: "(no answer - timer expired)",
+      correct: state.currentQuestion.preferredAnswer
+    });
+    updateIncorrectList();
+    el.feedback.textContent = "Time is up. Correct answer: " + state.currentQuestion.preferredAnswer;
+    el.feedback.className = "feedback bad";
+    el.showStepsBtn.disabled = false;
+    el.nextBtn.disabled = false;
+    state.awaitingNext = true;
+    addLivePanel("Time expired. Correct answer: " + state.currentQuestion.preferredAnswer, "no");
+    setAria("Time is up. Press Next for another question.");
+    playTone(false);
+  }
+
+  function playTone(correct){
+    if(!state.soundOn || !window.AudioContext) return;
+    try{
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "sine";
+      osc.frequency.value = correct ? 660 : 220;
+      gain.gain.setValueAtTime(0.001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (correct ? 0.16 : 0.22));
+      osc.start();
+      osc.stop(ctx.currentTime + (correct ? 0.16 : 0.22));
+    }catch(err){}
+  }
+
+  function buildWorksheet(){
+    const list = [];
+    const localRecent = [];
+    let tries = 0;
+    while(list.length < state.worksheetCount && tries < 300){
+      const q = makeQuestion();
+      const fp = makeFingerprint(q.text);
+      if(!localRecent.includes(fp)){
+        localRecent.push(fp);
+        list.push(q);
+      }
+      tries++;
+    }
+
+    el.worksheetList.innerHTML = "";
+    list.forEach((q, idx) => {
+      const box = document.createElement("div");
+      box.className = "ws-item";
+
+      const qDiv = document.createElement("div");
+      qDiv.className = "ws-q";
+      qDiv.textContent = (idx + 1) + ". " + q.text;
+      box.appendChild(qDiv);
+
+      const actions = document.createElement("div");
+      actions.className = "ws-actions";
+
+      const revealBtn = document.createElement("button");
+      revealBtn.textContent = "Reveal";
+      actions.appendChild(revealBtn);
+
+      const ans = document.createElement("div");
+      ans.className = "ws-answer";
+      ans.textContent = "Answer: " + q.preferredAnswer;
+
+      const steps = document.createElement("div");
+      steps.className = "ws-steps";
+      steps.textContent = q.steps;
+
+      revealBtn.addEventListener("click", () => {
+        const showing = ans.style.display === "block";
+        ans.style.display = showing ? "none" : "block";
+        steps.style.display = showing ? "none" : "block";
+      });
+
+      box.appendChild(actions);
+      box.appendChild(ans);
+      box.appendChild(steps);
+      el.worksheetList.appendChild(box);
+    });
+
+    const topActions = document.createElement("div");
+    topActions.className = "worksheet-controls";
+    topActions.style.marginTop = "2px";
+    topActions.style.marginBottom = "8px";
+
+    const revealAll = document.createElement("button");
+    revealAll.textContent = "Reveal All";
+    const hideAll = document.createElement("button");
+    hideAll.textContent = "Hide All";
+
+    revealAll.addEventListener("click", () => {
+      Array.from(el.worksheetList.querySelectorAll(".ws-answer,.ws-steps")).forEach(node => {
+        node.style.display = "block";
+      });
+    });
+
+    hideAll.addEventListener("click", () => {
+      Array.from(el.worksheetList.querySelectorAll(".ws-answer,.ws-steps")).forEach(node => {
+        node.style.display = "none";
+      });
+    });
+
+    topActions.appendChild(revealAll);
+    topActions.appendChild(hideAll);
+
+    el.worksheetList.prepend(topActions);
+  }
+
+  function setWorksheetCount(count){
+    state.worksheetCount = count;
+    ["5","10","15"].forEach(n => {
+      const btn = document.getElementById("ws" + n);
+      if(btn) btn.classList.toggle("active", Number(n) === count);
+    });
+  }
+
+  function initEvents(){
+    Array.from(el.modeButtons.querySelectorAll("button[data-mode]")).forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.mode = btn.getAttribute("data-mode");
+        setActiveButtonGroup(el.modeButtons, "data-mode", state.mode);
+        updateModeUI();
+        stopTimer();
+        if(state.mode === "worksheet"){
+          buildWorksheet();
+        }
+      });
+    });
+
+    Array.from(el.difficultyButtons.querySelectorAll("button[data-difficulty]")).forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.difficulty = btn.getAttribute("data-difficulty");
+        setActiveButtonGroup(el.difficultyButtons, "data-difficulty", state.difficulty);
+        updateStatDifficultyLabel();
+        if(state.mode === "game") renderQuestion();
+      });
+    });
+
+    el.timerToggle.addEventListener("click", () => {
+      state.timerOn = !state.timerOn;
+      el.timerToggle.textContent = state.timerOn ? "On" : "Off";
+      el.timerToggle.classList.toggle("active", state.timerOn);
+      if(state.mode === "game") renderQuestion();
+      else updateTimerReadout();
+    });
+
+    Array.from(el.timerButtons.querySelectorAll("button[data-seconds]")).forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.timerSeconds = Number(btn.getAttribute("data-seconds"));
+        state.timeLeft = state.timerSeconds;
+        Array.from(el.timerButtons.querySelectorAll("button")).forEach(b => b.classList.toggle("active", b === btn));
+        updateTimerReadout();
+        if(state.mode === "game" && state.timerOn){
+          resetTimer();
+          startTimer();
+        }
+      });
+    });
+
+    el.soundToggle.addEventListener("click", () => {
+      state.soundOn = !state.soundOn;
+      el.soundToggle.textContent = state.soundOn ? "Sound On" : "Sound Off";
+      el.soundToggle.classList.toggle("active", state.soundOn);
+    });
+
+    el.contrastToggle.addEventListener("click", () => {
+      state.highContrast = !state.highContrast;
+      document.body.classList.toggle("high-contrast", state.highContrast);
+      el.contrastToggle.textContent = state.highContrast ? "High Contrast On" : "High Contrast Off";
+      el.contrastToggle.classList.toggle("active", state.highContrast);
+    });
+
+    el.newQuestionBtn.addEventListener("click", () => {
+      if(state.mode === "game") renderQuestion();
+      else buildWorksheet();
+    });
+
+    el.submitBtn.addEventListener("click", () => {
+      if(state.awaitingNext){
+        nextQuestion();
+      } else {
+        checkAnswer();
+      }
+    });
+
+    el.nextBtn.addEventListener("click", () => {
+      nextQuestion();
+    });
+
+    el.clearBtn.addEventListener("click", clearInput);
+    el.showStepsBtn.addEventListener("click", showSteps);
+
+    el.answerInput.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        e.preventDefault();
+        if(state.awaitingNext){
+          nextQuestion();
+        } else {
+          checkAnswer();
+        }
+      } else if(e.key === "Escape"){
+        e.preventDefault();
+        clearInput();
+      }
+    });
+
+    Array.from(document.querySelectorAll("[data-wscount]")).forEach(btn => {
+      btn.addEventListener("click", () => {
+        setWorksheetCount(Number(btn.getAttribute("data-wscount")));
+      });
+    });
+
+    el.generateWorksheetBtn.addEventListener("click", buildWorksheet);
+  }
+
+  function initDefaults(){
+    updateStats();
+    updateIncorrectList();
+    setActiveButtonGroup(el.modeButtons, "data-mode", state.mode);
+    setActiveButtonGroup(el.difficultyButtons, "data-difficulty", state.difficulty);
+    const defaultTimerBtn = el.timerButtons.querySelector('button[data-seconds="30"]');
+    if(defaultTimerBtn) defaultTimerBtn.classList.add("active");
+    setWorksheetCount(5);
+    updateTimerReadout();
+    renderQuestion();
+  }
+
+  function assert(name, condition){
+    return {name, pass: !!condition};
+  }
+
+  function runDevTests(){
+    const results = [];
+    const samples = [];
+    for(let i=0;i<80;i++){
+      const oldDifficulty = state.difficulty;
+      state.difficulty = pick(["easy","medium","hard"]);
+      const q = makeQuestion();
+      samples.push(q);
+      state.difficulty = oldDifficulty;
+    }
+
+    results.push(assert("At least 80 sample questions generated", samples.length === 80));
+    results.push(assert("All sample questions have text", samples.every(q => typeof q.text === "string" && q.text.length > 10)));
+    results.push(assert("All sample questions have steps", samples.every(q => typeof q.steps === "string" && q.steps.length > 10)));
+    results.push(assert("No sample question has empty preferred answer", samples.every(q => String(q.preferredAnswer).trim() !== "")));
+    results.push(assert("Standard probability answers stay in range 0 to 1", samples.filter(q => !(q.meta && q.meta.allowGreaterThanOne)).every(q => q.answerValue >= 0 && q.answerValue <= 1)));
+    results.push(assert("Reverse questions can exceed 1 only when allowed", samples.filter(q => q.answerValue > 1).every(q => q.meta && q.meta.allowGreaterThanOne)));
+    results.push(assert("Equivalent fraction input works: 2/4 equals 1/2", answerMatches("2/4", {answerValue:0.5}).correct === true));
+    results.push(assert("Percent input works: 50% equals 1/2", answerMatches("50%", {answerValue:0.5}).correct === true));
+    results.push(assert("Decimal input works: 0.5 equals 1/2", answerMatches("0.5", {answerValue:0.5}).correct === true));
+    results.push(assert("Decimal comma input works: 0,5 equals 1/2", answerMatches("0,5", {answerValue:0.5}).correct === true));
+    results.push(assert("Invalid denominator 0 is rejected", parseUserAnswer("1/0").ok === false));
+    results.push(assert("Weather complement questions sum to 1", samples.filter(q => q.meta && q.meta.type === "weather-complement").every(q => q.answerValue > 0 && q.answerValue < 1)));
+    results.push(assert("Multiple-of questions produce clean fractions", samples.filter(q => q.meta && q.meta.type === "multiple-of").every(q => Number.isFinite(q.answerValue))));
+    results.push(assert("No recent duplicate fingerprints are created in short sequence", (function(){
+      const seen = new Set();
+      for(let i=0;i<20;i++){
+        const q = makeQuestion();
+        const fp = makeFingerprint(q.text);
+        if(seen.has(fp)) return false;
+        seen.add(fp);
+      }
+      return true;
+    })()));
+    results.push(assert("Worksheet generator count setting valid", [5,10,15].includes(state.worksheetCount)));
+    results.push(assert("Easy generator returns easy", (function(){
+      const d = state.difficulty; state.difficulty="easy"; const q=makeQuestion(); state.difficulty=d; return q.difficulty==="easy";
+    })()));
+    results.push(assert("Medium generator returns medium", (function(){
+      const d = state.difficulty; state.difficulty="medium"; const q=makeQuestion(); state.difficulty=d; return q.difficulty==="medium";
+    })()));
+    results.push(assert("Hard generator returns hard", (function(){
+      const d = state.difficulty; state.difficulty="hard"; const q=makeQuestion(); state.difficulty=d; return q.difficulty==="hard";
+    })()));
+
+    const passCount = results.filter(r => r.pass).length;
+    const failCount = results.length - passCount;
+
+    el.devPanel.style.display = "block";
+    el.devPanel.innerHTML =
+      "<h3>Developer Tests</h3>" +
+      "<div class='small'>Visible only with ?dev=1</div>" +
+      "<div style='margin:8px 0 10px;'><span class='" + (failCount===0 ? "dev-pass" : "dev-fail") + "'>" +
+      passCount + "/" + results.length + " tests passed</span></div>" +
+      "<div class='mono'>" +
+      results.map(r => "<div class='" + (r.pass ? "dev-pass" : "dev-fail") + "'>" + (r.pass ? "PASS" : "FAIL") + " - " + escapeHtml(r.name) + "</div>").join("") +
+      "</div>";
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  initEvents();
+  initDefaults();
+
+  if(new URLSearchParams(window.location.search).get("dev") === "1"){
+    runDevTests();
+  }
+})();
+</script>
+</body>
+</html>
